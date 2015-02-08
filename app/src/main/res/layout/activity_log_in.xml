@@ -1,0 +1,29 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="200sp"
+    android:paddingBottom="100dp" tools:context=".LogIn"
+    android:background="@drawable/devoir_signin">
+
+    <TextView android:text="@string/app_name" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/title"
+        android:textSize="56sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/abc_primary_text_material_dark"
+        android:typeface="normal"
+        android:textIsSelectable="false"
+        android:textStyle="bold"
+        android:textColorHighlight="@color/accent_material_light" />
+
+    <com.google.android.gms.common.SignInButton
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/signInButton"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        />
+
+</RelativeLayout>
