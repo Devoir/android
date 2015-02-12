@@ -70,6 +70,8 @@ public class LogIn extends Activity implements GoogleApiClient.ConnectionCallbac
     public void onConnected(Bundle bundle) {
         mSignInClicked = false;
         Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
