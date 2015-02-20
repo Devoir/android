@@ -3,13 +3,23 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    
+    <CheckBox
+        android:id="@+id/complete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:gravity="fill_vertical"
+        android:onClick="toggleComplete" />
 
     <TextView
         android:id="@+id/task_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_alignParentLeft="true"
+        android:layout_toRightOf="@id/complete"
         android:gravity="fill_vertical"
         android:textSize="20dp"/>
 
@@ -18,6 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_below="@id/task_name" />
+        android:layout_below="@id/task_name"
+        android:layout_toRightOf="@id/complete" />
 
 </RelativeLayout>
