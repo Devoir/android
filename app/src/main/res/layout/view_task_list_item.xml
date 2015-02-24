@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingLeft="8dp">
     
     <CheckBox
         android:id="@+id/complete"
@@ -11,7 +12,7 @@
         android:layout_weight="2"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingRight="8dp"
         android:gravity="fill_vertical"
         android:button="@drawable/custom_checkbox"
         android:onClick="toggleComplete" />
