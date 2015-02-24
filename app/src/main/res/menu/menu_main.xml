@@ -1,13 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.devoir.android.MainActivity">
+    tools:context="com.devoir.android.TaskActivity">
 
     <item
         android:id="@+id/action_jump_to_date"
         android:icon="@drawable/ic_action_go_to_today"
         android:title="@string/jump_to_date"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_filter"
