@@ -21,9 +21,11 @@ import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -33,6 +35,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     DayPagerAdapter mDayPagerAdapter;
     ViewPager mViewPager;
     GoogleApiClient mGoogleApiClient;
+    Date currentDate;
 
     private static final Map<Integer, String> months = new HashMap<Integer, String>() {{
         put(0, "Jan");
@@ -55,51 +58,37 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe_view);
 
-        // Create an adapter that when requested, will return a fragment representing an object in
-        // the collection.
-        //
-        // ViewPager and its adapters use support library fragments, so we must use
-        // getSupportFragmentManager.
-        mDayPagerAdapter = new DayPagerAdapter(getSupportFragmentManager());
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+       /* mViewPager.setOnPageChangeListener( new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-        // Set up action bar.
-        //final ActionBar actionBar = getActionBar();
+                }
 
-        // Specify that the Home button should show an "Up" caret, indicating that touching the
-        // button will take the user one step up in the application's hierarchy.
-        //actionBar.setDisplayHomeAsUpEnabled(true);
+                @Override
+                public void onPageSelected(int position) {
+                    if(position < 3 || )
+                }
 
-        // Set up the ViewPager, attaching the adapter.
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            }
+
+        );
+*/
+        updatePagerView(new Date());
+    }
+
+    private void updatePagerView(Date day) {
+
+        currentDate = day;
+        mDayPagerAdapter = new DayPagerAdapter(getSupportFragmentManager(), currentDate);
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mDayPagerAdapter);
+        mViewPager.setCurrentItem(30);
     }
-
-
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_swipe_view, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        } else if(id == R.id.logout) {
-            Intent signInIntent = new Intent(this, LogIn.class);
-            startActivity(signInIntent);
-            finish();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -131,19 +120,23 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
 
     private void showCalendarDialog() {
         Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
         boolean isVibrate = true;
         DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(this,
                 calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH), isVibrate);
 
-        datePickerDialog.setYearRange(2005, 2036);
-        datePickerDialog.setCloseOnSingleTapDay(false);
+        datePickerDialog.setYearRange(2010, 2020);
+        datePickerDialog.setCloseOnSingleTapDay(true);
         datePickerDialog.show(getSupportFragmentManager(), "datepicker");
     }
 
     @Override
     public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
         Toast.makeText(TaskActivity.this, day + " " + months.get(month) + " " + year, Toast.LENGTH_LONG).show();
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month, day);
+        updatePagerView(cal.getTime());
     }
 
     @Override
@@ -159,66 +152,5 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     @Override
     public boolean onLongClick(View v) {
         return false;
-    }
-
-    public static class DayPagerAdapter extends FragmentStatePagerAdapter {
-
-        public DayPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int i) {
-            Fragment fragment = new DayObjectFragment();
-            Bundle args = new Bundle();
-            args.putInt(DayObjectFragment.ARG_OBJECT, i + 1); // Our object is just an integer :-P
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public int getCount() {
-            // For this contrived example, we have a 100-object collection.
-            return 10;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(new Date());
-            cal.add(Calendar.DATE, position);
-            SimpleDateFormat df = new SimpleDateFormat("EEE, dd MMM yyy");
-            return df.format(cal.getTime());
-        }
-    }
-
-    public static class DayObjectFragment extends Fragment {
-
-        public static final String ARG_OBJECT = "object";
-        private RecyclerView recyclerView;
-        private TaskAdapter taskAdapter;
-        private RecyclerView.LayoutManager layoutManager;
-
-
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState)  {
-            View rootView = inflater.inflate(R.layout.activity_main, container, false);
-            Bundle args = getArguments();
-            recyclerView = (RecyclerView) rootView.findViewById(R.id.task_recycler_view);
-            recyclerView.setHasFixedSize(true);
-
-            layoutManager = new LinearLayoutManager(getActivity());
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.addItemDecoration(new DividerDecoration(getActivity(), null));
-
-            taskAdapter = new TaskAdapter(getActivity());
-            taskAdapter.setOnItemClickListener((TaskActivity) getActivity());
-            recyclerView.setAdapter(taskAdapter);
-
-            //((TextView) rootView.findViewById(android.R.id.text1)).setText(Integer.toString(args.getInt(ARG_OBJECT)));
-            return rootView;
-        }
     }
 }
