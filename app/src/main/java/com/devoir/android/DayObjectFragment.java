@@ -34,9 +34,20 @@ public class DayObjectFragment extends Fragment {
 
         taskAdapter = new TaskAdapter(getActivity());
         taskAdapter.setOnItemClickListener((TaskActivity) getActivity());
+        taskAdapter.setOnLongClick((TaskActivity) getActivity());
         recyclerView.setAdapter(taskAdapter);
+
+        ((TaskActivity) getActivity()).setFragment(this);
 
         //((TextView) rootView.findViewById(android.R.id.text1)).setText(Integer.toString(args.getInt(ARG_OBJECT)));
         return rootView;
+    }
+
+    public TaskAdapter getTaskAdapter() {
+        return this.taskAdapter;
+    }
+
+    public RecyclerView getRecyclerView() {
+        return this.recyclerView;
     }
 }
