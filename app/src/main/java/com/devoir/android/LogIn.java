@@ -1,8 +1,10 @@
 package com.devoir.android;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -44,10 +46,11 @@ public class LogIn extends Activity implements GoogleApiClient.ConnectionCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
+    }
 
-        signInBtn = (SignInButton) findViewById(R.id.signInButton);
-        signInBtn.setSize(SignInButton.SIZE_WIDE);
-        signInBtn.setOnClickListener(this);
+    @Override
+    protected void onStart() {
+        super.onStart();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -55,6 +58,7 @@ public class LogIn extends Activity implements GoogleApiClient.ConnectionCallbac
                 .addApi(Plus.API)
                 .addScope(Plus.SCOPE_PLUS_LOGIN)
                 .build();
+        mGoogleApiClient.connect();
     }
 
     @Override
@@ -68,6 +72,10 @@ public class LogIn extends Activity implements GoogleApiClient.ConnectionCallbac
 
     @Override
     public void onConnected(Bundle bundle) {
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(getString(R.string.google_log_in_flag), true);
+        editor.commit();
         mSignInClicked = false;
         Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, TaskActivity.class);
@@ -121,11 +129,20 @@ public class LogIn extends Activity implements GoogleApiClient.ConnectionCallbac
             // Store the ConnectionResult so that we can use it later when the user clicks
             // 'sign-in'.
             mConnectionResult = result;
+            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean(getString(R.string.google_log_in_flag), false);
+            editor.commit();
 
             if (mSignInClicked) {
                 // The user has already clicked 'sign-in' so we attempt to resolve all
                 // errors until the user is signed in, or they cancel.
                 resolveSignInError();
+            } else {
+                signInBtn = (SignInButton) findViewById(R.id.signInButton);
+                signInBtn.setSize(SignInButton.SIZE_WIDE);
+                signInBtn.setOnClickListener(this);
+                signInBtn.setVisibility(View.VISIBLE);
             }
         }
     }

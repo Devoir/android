@@ -8,5 +8,5 @@
     <string name="logout">Log Out</string>
     <string name="filter_tasks">Filter Tasks</string>
     <string name="add_feed">Add Feed</string>
-
+    <string name="google_log_in_flag">oauthFlag</string>
 </resources>
