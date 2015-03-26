@@ -192,7 +192,9 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         Toast.makeText(TaskActivity.this, day + " " + months.get(month) + " " + year, Toast.LENGTH_LONG).show();
         Calendar cal = Calendar.getInstance();
         cal.set(year, month, day);
-        updatePagerView(cal.getTime());
+        if(cal.getTime() != currentDate) {
+            updatePagerView(cal.getTime());
+        }
     }
 
     @Override
