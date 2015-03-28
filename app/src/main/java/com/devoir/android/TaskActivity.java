@@ -1,6 +1,7 @@
 package com.devoir.android;
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -20,6 +21,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -38,6 +40,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     DayObjectFragment mDayObjectFragment;
     ViewPager mViewPager;
     GoogleApiClient mGoogleApiClient;
+    Context ths;
     Date currentDate;
 
     private static final Map<Integer, String> months = new HashMap<Integer, String>() {{
@@ -79,13 +82,32 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_hide:
+                    final ActionMode currentMode = mode;
                     StringBuilder sb = new StringBuilder();
                     sb.append("Indicies of tasks to hide:\n");
                     for (Integer i : mDayObjectFragment.getTaskAdapter().getSelectedItems()) {
                         sb.append(i + " ");
                     }
                     System.out.println(sb.toString().trim());
-                    mode.finish(); // Action picked, so close the CAB
+                    //mode.finish(); // Action picked, so close the CAB
+                    MaterialDialog.Builder dialog = new MaterialDialog.Builder(ths)
+                            .title("Hide Assignments?")
+                            .content("Are you sure you want to hide these assignments?")
+                            .negativeText("CANCEL")
+                            .positiveText("OK")
+                            .callback(new MaterialDialog.ButtonCallback() {
+                                @Override
+                                public void onPositive(MaterialDialog dialog) {
+                                    currentMode.finish();
+                                    dialog.dismiss();
+                                }
+
+                                @Override
+                                public void onNegative(MaterialDialog dialog) {
+                                   dialog.dismiss();
+                                }
+                            });
+                    dialog.show();
                     return true;
                 default:
                     return false;
@@ -105,6 +127,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe_view);
+        ths = this;
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
        /* mViewPager.setOnPageChangeListener( new ViewPager.OnPageChangeListener() {
