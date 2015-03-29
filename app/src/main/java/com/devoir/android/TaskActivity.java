@@ -2,6 +2,7 @@ package com.devoir.android;
 
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -184,7 +185,8 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         int id = item.getItemId();
 
         if (id == R.id.action_add_feed) {
-            //addFeed();
+            Intent addCourseIntent = new Intent(this, AddCourseActivity.class);
+            startActivity(addCourseIntent);
             return true;
         } else if (id == R.id.action_filter) {
             //filter();
