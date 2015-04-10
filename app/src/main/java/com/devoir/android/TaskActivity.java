@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -43,6 +44,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     GoogleApiClient mGoogleApiClient;
     Context ths;
     Date currentDate;
+    List courses;
 
     private static final Map<Integer, String> months = new HashMap<Integer, String>() {{
         put(0, "Jan");
@@ -127,10 +129,24 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_swipe_view);
+        courses = new ArrayList();
         ths = this;
+        if(courses.size() > 0) {
+            setContentView(R.layout.activity_swipe_view);
+            mViewPager = (ViewPager) findViewById(R.id.pager);
+            updatePagerView(new Date());
+        } else {
+            setContentView(R.layout.task_no_course);
+            Button addCourseButton = (Button) findViewById(R.id.no_course_add_button);
+            addCourseButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent addCourseIntent = new Intent(ths, AddCourseActivity.class);
+                    startActivity(addCourseIntent);
+                }
+            });
+        }
 
-        mViewPager = (ViewPager) findViewById(R.id.pager);
        /* mViewPager.setOnPageChangeListener( new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -150,7 +166,6 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
 
         );
 */
-        updatePagerView(new Date());
     }
 
     public void toggleComplete(View view) {
@@ -173,7 +188,9 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        if(courses.size() > 0) {
+            getMenuInflater().inflate(R.menu.menu_main, menu);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 

@@ -80,6 +80,7 @@ public class LogIn extends Activity implements GoogleApiClient.ConnectionCallbac
         Toast.makeText(this, "User is connected!", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(this, TaskActivity.class);
         startActivity(intent);
+        finish();
     }
 
     @Override

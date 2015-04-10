@@ -12,7 +12,7 @@
     <string name="action_hide">hide</string>
     <string name="add_course">Add Course</string>
     <string name="course_name">Course Name</string>
-    <string name="add_ical_feed">Add iCal Feed&#8230;</string>
+    <string name="ical_feed_url">iCal Feed Url</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
 </resources>

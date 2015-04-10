@@ -34,7 +34,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:background="@android:color/transparent"
-                android:id="@+id/editText"
+                android:id="@+id/coure_name_input"
                 android:layout_weight="1"
                 android:layout_gravity="center_vertical"
                 android:hint="@string/course_name"
@@ -57,16 +57,13 @@
             android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp">
 
-            <View
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:background="@android:drawable/ic_input_add"
-                android:layout_gravity="center_vertical"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <EditText
+                android:id="@+id/ical_feed_input"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:layout_gravity="center_vertical"
-                android:text="@string/add_ical_feed"
+                android:background="@android:color/transparent"
+                android:hint="@string/ical_feed_url"
                 android:textSize="18sp"/>
 
             </LinearLayout>

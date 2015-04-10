@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="default_color_choice_values" translatable="false">
-        <item>#33b5e5</item>
-        <item>#aa66cc</item>
-        <item>#99cc00</item>
-        <item>#ffbb33</item>
-        <item>#ff4444</item>
-        <item>#0099cc</item>
-        <item>#9933cc</item>
-        <item>#669900</item>
-        <item>#ff8800</item>
-        <item>#cc0000</item>
-        <item>#888888</item>
+        <item>#D36FB0</item>
+        <item>#D0437A</item>
+        <item>#C30050</item>
+        <item>#CB2D2D</item>
+        <item>#90C039</item>
+        <item>#F3BB18</item>
+        <item>#F77C36</item>
+        <item>#E35835</item>
+        <item>#4C87E1</item>
+        <item>#44B8EA</item>
+        <item>#2FC5A8</item>
+        <item>#2D9B59</item>
+        <item>#9279E2</item>
+        <item>#59518A</item>
+        <item>#66375B</item>
+        <item>#8E1A6D</item>
     </string-array>
 </resources>
