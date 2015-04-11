@@ -107,7 +107,7 @@ public class LogIn extends Activity implements GoogleApiClient.ConnectionCallbac
             mGoogleApiClient.connect();
         }
         // this is just for development! change it back to actually use oauth!
-        onConnected(null);
+        //onConnected(null);
     }
 
     /* A helper method to resolve the current ConnectionResult error. */

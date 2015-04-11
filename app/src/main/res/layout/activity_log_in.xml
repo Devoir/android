@@ -6,7 +6,7 @@
     android:paddingBottom="100dp" tools:context=".LogIn"
     android:background="@drawable/devoir_signin">
 
-    <TextView android:text="@string/app_name" android:layout_width="wrap_content"
+    <!--<TextView android:text="@string/app_name" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/title"
         android:textSize="56sp"
@@ -16,7 +16,7 @@
         android:typeface="normal"
         android:textIsSelectable="false"
         android:textStyle="bold"
-        android:textColorHighlight="@color/accent_material_light" />
+        android:textColorHighlight="@color/accent_material_light" />-->
 
     <com.google.android.gms.common.SignInButton
         android:layout_height="wrap_content"
