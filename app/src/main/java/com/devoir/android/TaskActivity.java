@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -108,6 +109,10 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
                                 public void onPositive(MaterialDialog dialog) {
                                     currentMode.finish();
                                     dialog.dismiss();
+                                    mDayObjectFragment.getTaskAdapter().setHideModeActivated(false);
+                                    for (int i = 0; i < mDayObjectFragment.getRecyclerView().getChildCount(); ++i) {
+                                        mDayObjectFragment.getRecyclerView().getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                                    }
                                 }
 
                                 @Override
@@ -118,6 +123,10 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
                     dialog.show();
                     return true;
                 default:
+                    mDayObjectFragment.getTaskAdapter().setHideModeActivated(false);
+                    for (int i = 0; i < mDayObjectFragment.getRecyclerView().getChildCount(); ++i) {
+                        mDayObjectFragment.getRecyclerView().getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                    }
                     return false;
             }
         }
@@ -254,9 +263,13 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         // TODO respond to a regular task click
-        System.out.println("Postion clicked: " + position);
+        System.out.println("Position clicked: " + position);
         if (mActionMode != null) {
-            mDayObjectFragment.getTaskAdapter().toggleSelection(position);
+            if (mDayObjectFragment.getTaskAdapter().toggleSelection(position)) {
+                view.setBackgroundColor(Color.LTGRAY);
+            } else {
+                view.setBackgroundColor(Color.TRANSPARENT);
+            }
             return;
         }
     }
@@ -270,6 +283,8 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         // Start the CAB using the ActionMode.Callback defined above
         mActionMode = this.startActionMode(mActionModeCallback);
         mDayObjectFragment.getTaskAdapter().toggleSelection(mDayObjectFragment.getRecyclerView().getChildPosition(v));
+        v.setBackgroundColor(Color.LTGRAY);
+        mDayObjectFragment.getTaskAdapter().setHideModeActivated(true);
         return true;
     }
 

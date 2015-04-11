@@ -2,12 +2,15 @@ package com.devoir.android;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.devoir.android.Database.DBContract;
@@ -29,6 +32,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     private AdapterView.OnItemClickListener onItemClickListener;
     private AdapterView.OnLongClickListener onLongClickListener;
     private Date currentDate;
+    private boolean hideModeActivated = false;
 
     private SparseBooleanArray selectedItems;
 
@@ -42,13 +46,29 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    public void toggleSelection(int pos) {
+    public void setHideModeActivated(boolean hideModeActivated) {
+        this.hideModeActivated = hideModeActivated;
+        notifyDataSetChanged();
+    }
+
+    public boolean getHideModeActivated() {
+        return this.hideModeActivated;
+    }
+
+    /**
+     * @param pos index of the item clicked while in the hide mode
+     * @return whether the view at this position is selected or not
+     */
+    public boolean toggleSelection(int pos) {
+        boolean isSelected = false;
         if (selectedItems.get(pos, false)) {
             selectedItems.delete(pos);
         } else {
             selectedItems.put(pos, true);
+            isSelected = true;
         }
         notifyItemChanged(pos);
+        return isSelected;
     }
 
     public void clearSelections() {
@@ -111,8 +131,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         Task task = dataSet.get(position);
-        holder.setName(task.getName());
-        holder.setDescription(task.getDescription());
+        holder.mName.setText(task.getName());
+        holder.mDescription.setText(task.getDescription());
         holder.setDueDate(task.getDueDate());
         holder.itemView.setActivated(selectedItems.get(position, false));
         holder.setColor(task.getColor());
@@ -122,6 +142,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         } else {
             holder.isPastDue(false);
         }
+        holder.mCheckbox.setEnabled(!this.hideModeActivated);
+        holder.mCheckbox.setClickable(!this.hideModeActivated);
+        System.out.println("enabled: " + holder.mCheckbox.isEnabled());
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -162,6 +185,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         private View mPastDueStripe;
         private TextView mDueDate;
         private SimpleDateFormat df;
+        private CheckBox mCheckbox;
 
         private TaskAdapter mAdapter;
 
@@ -178,20 +202,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             mDueDate = (TextView) v.findViewById(R.id.task_due_date);
             mColorStripe = (View) v.findViewById(R.id.color_stripe);
             mPastDueStripe = (View) v.findViewById(R.id.past_due_stripe);
-
+            mCheckbox = (CheckBox) v.findViewById(R.id.complete);
         }
 
         @Override
         public void onClick(View v) {
             mAdapter.onItemHolderClick(this);
-        }
-
-        public void setName(String name) {
-            mName.setText(name);
-        }
-
-        public void setDescription(String description) {
-            mDescription.setText(description);
         }
 
         public void setDueDate(Date date) {

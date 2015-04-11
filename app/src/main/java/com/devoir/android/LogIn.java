@@ -101,11 +101,13 @@ public class LogIn extends Activity implements GoogleApiClient.ConnectionCallbac
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.signInButton
+        /*if (v.getId() == R.id.signInButton
                 && !mGoogleApiClient.isConnecting()) {
             mSignInClicked = true;
             mGoogleApiClient.connect();
-        }
+        }*/
+        // this is just for development! change it back to actually use oauth!
+        onConnected(null);
     }
 
     /* A helper method to resolve the current ConnectionResult error. */
