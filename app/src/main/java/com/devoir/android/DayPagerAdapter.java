@@ -45,7 +45,7 @@ public class DayPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int i) {
         Fragment fragment = new DayObjectFragment();
         Bundle args = new Bundle();
-        args.putInt(DayObjectFragment.ARG_OBJECT, i + 1); // Our object is just an integer :-P
+        args.putLong(DayObjectFragment.ARG_OBJECT, dates.get(i).getTime()); // Our object is just an integer :-P
         fragment.setArguments(args);
         return fragment;
     }

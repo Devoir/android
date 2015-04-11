@@ -1,5 +1,6 @@
 package com.devoir.android;
 
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
@@ -132,8 +133,15 @@ public class AddCourseActivity extends ActionBarActivity {
         }
 
         private void postData(Object data) {
+            Intent intent = new Intent();
+            intent.putExtra("course_name", courseNameInput.getText().toString());
+            intent.putExtra("course_feed", icalFeedInput.getText().toString());
+            intent.putExtra("course_color", mSelectedColor);
+            setResult(RESULT_OK, intent);
+            finish();
 
-            String courseJson = new Gson().toJson(data, JsonCourse.class);
+            //TODO this is the code to save to the server.
+            /*String courseJson = new Gson().toJson(data, JsonCourse.class);
             Log.d("Devoir", "Course Json: " + courseJson);
             HttpPost post = new HttpPost("http://192.168.1.116:3000/api/courses");
             post.setHeader("Content-type", "application/json");
@@ -144,6 +152,7 @@ public class AddCourseActivity extends ActionBarActivity {
                 HttpResponse response = (new DefaultHttpClient()).execute(post);
 
                 if(response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                    setResult(RESULT_OK);
                     finish();
                     Log.d("Devoir", "Course saved successfully");
                 } else {
@@ -151,7 +160,7 @@ public class AddCourseActivity extends ActionBarActivity {
                 }
             } catch (Exception e) {
                 Log.e("Devoir", "Exception When Creating Course: " + e.getMessage());
-            }
+            }*/
         }
     }
 }

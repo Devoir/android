@@ -3,6 +3,7 @@ package com.devoir.android;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -24,15 +25,20 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.devoir.android.utils.AppData;
+import com.devoir.android.utils.CourseBuilder;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 
@@ -44,7 +50,6 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     GoogleApiClient mGoogleApiClient;
     Context ths;
     Date currentDate;
-    List courses;
 
     private static final Map<Integer, String> months = new HashMap<Integer, String>() {{
         put(0, "Jan");
@@ -107,7 +112,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
 
                                 @Override
                                 public void onNegative(MaterialDialog dialog) {
-                                   dialog.dismiss();
+                                    dialog.dismiss();
                                 }
                             });
                     dialog.show();
@@ -129,22 +134,11 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
-        courses = new ArrayList();
         ths = this;
-        if(courses.size() > 0) {
-            setContentView(R.layout.activity_swipe_view);
-            mViewPager = (ViewPager) findViewById(R.id.pager);
-            updatePagerView(new Date());
+        if (AppData.courses != null && AppData.courses.size() > 0) {
+            createTaskView();
         } else {
-            setContentView(R.layout.task_no_course);
-            Button addCourseButton = (Button) findViewById(R.id.no_course_add_button);
-            addCourseButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent addCourseIntent = new Intent(ths, AddCourseActivity.class);
-                    startActivity(addCourseIntent);
-                }
-            });
+            createAddCourseView();
         }
 
        /* mViewPager.setOnPageChangeListener( new ViewPager.OnPageChangeListener() {
@@ -168,6 +162,24 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
 */
     }
 
+    private void createTaskView(){
+        setContentView(R.layout.activity_swipe_view);
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        updatePagerView(new Date());
+    }
+
+    private void createAddCourseView() {
+        setContentView(R.layout.task_no_course);
+        Button addCourseButton = (Button) findViewById(R.id.no_course_add_button);
+        addCourseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent addCourseIntent = new Intent(ths, AddCourseActivity.class);
+                startActivityForResult(addCourseIntent, 1);
+            }
+        });
+    }
+
     public void toggleComplete(View view) {
         //TODO update Completeness of task in DB
     }
@@ -188,7 +200,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        if(courses.size() > 0) {
+        if (AppData.courses != null && AppData.courses.size() > 0) {
             getMenuInflater().inflate(R.menu.menu_main, menu);
         }
         return super.onCreateOptionsMenu(menu);
@@ -203,7 +215,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
 
         if (id == R.id.action_add_feed) {
             Intent addCourseIntent = new Intent(this, AddCourseActivity.class);
-            startActivity(addCourseIntent);
+            startActivityForResult(addCourseIntent, 1);
             return true;
         } else if (id == R.id.action_filter) {
             //filter();
@@ -234,7 +246,7 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         Toast.makeText(TaskActivity.this, day + " " + months.get(month) + " " + year, Toast.LENGTH_LONG).show();
         Calendar cal = Calendar.getInstance();
         cal.set(year, month, day);
-        if(cal.getTime() != currentDate) {
+        if (cal.getTime() != currentDate) {
             updatePagerView(cal.getTime());
         }
     }
@@ -260,4 +272,25 @@ public class TaskActivity extends ActionBarActivity implements DatePickerDialog.
         mDayObjectFragment.getTaskAdapter().toggleSelection(mDayObjectFragment.getRecyclerView().getChildPosition(v));
         return true;
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK){
+                CourseBuilder.createCourse(data.getStringExtra("course_name"), data.getStringExtra("course_feed"), data.getIntExtra("course_color", 0xFFD36FB0));
+                recreate();
+            }
+        }
+    }
+
+
+    /*@Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK){
+                String stredittext=data.getStringExtra("edittextvalue");
+            }
+        }
+    }*/
 }

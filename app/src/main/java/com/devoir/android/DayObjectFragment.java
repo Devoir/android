@@ -32,7 +32,7 @@ public class DayObjectFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new DividerDecoration(getActivity(), null));
 
-        taskAdapter = new TaskAdapter(getActivity());
+        taskAdapter = new TaskAdapter(getActivity(), args);
         taskAdapter.setOnItemClickListener((TaskActivity) getActivity());
         taskAdapter.setOnLongClick((TaskActivity) getActivity());
         recyclerView.setAdapter(taskAdapter);

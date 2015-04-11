@@ -1,6 +1,4 @@
-package com.devoir.android;
-
-import android.graphics.Color;
+package com.devoir.android.model;
 
 import java.util.Comparator;
 import java.util.Date;
@@ -8,26 +6,24 @@ import java.util.Date;
 public class Task implements Comparable {
 
     private String id;
+    private String iCalEventID;
     private String name;
     private String description;
-    private Color color;
-    private Date createdDate;
-    private Date startDate;
+    private int color;
     private Date dueDate;
     private boolean markedComplete;
-    private boolean pastDue;
+    private boolean isVisible;
 
-    public Task(String id, String name, String description, Color c, Date created, Date start,
-                Date due, boolean complete) {
+    public Task(String id, String iCalID, String name, String description, int c,
+                Date due, boolean complete, boolean visible) {
         setId(id);
+        setICalEventID(iCalID);
         setName(name);
         setDescription(description);
         setColor(c);
-        setCreatedDate(created);
-        setStartDate(start);
         setDueDate(due);
         setMarkedComplete(complete);
-        setPastDue(new Date().after(due));
+        setVisible(visible);
     }
 
     public String getId() {
@@ -54,28 +50,12 @@ public class Task implements Comparable {
         this.description = description;
     }
 
-    public Color getColor() {
+    public int getColor() {
         return color;
     }
 
-    public void setColor(Color color) {
+    public void setColor(int color) {
         this.color = color;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
     }
 
     public Date getDueDate() {
@@ -94,12 +74,20 @@ public class Task implements Comparable {
         this.markedComplete = complete;
     }
 
-    public boolean getPastDue() {
-        return pastDue;
+    public boolean isVisible() {
+        return isVisible;
     }
 
-    public void setPastDue(boolean pastDue) {
-        this.pastDue = pastDue;
+    public void setVisible(boolean isVisible) {
+        this.isVisible = isVisible;
+    }
+
+    public String getICalEventID() {
+        return iCalEventID;
+    }
+
+    public void setICalEventID(String iCalEventID) {
+        this.iCalEventID = iCalEventID;
     }
 
     @Override

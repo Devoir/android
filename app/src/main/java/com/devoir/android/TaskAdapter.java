@@ -1,6 +1,7 @@
 package com.devoir.android;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -10,9 +11,13 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.devoir.android.Database.DBContract;
+import com.devoir.android.model.Task;
+import com.devoir.android.utils.CourseBuilder;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,11 +28,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     private ArrayList<Task> dataSet;
     private AdapterView.OnItemClickListener onItemClickListener;
     private AdapterView.OnLongClickListener onLongClickListener;
+    private Date currentDate;
 
     private SparseBooleanArray selectedItems;
 
-    public TaskAdapter(Context context) {
-        this.dataSet = DBContract.loadTasks(context);
+    public TaskAdapter(Context context, Bundle args) {
+        currentDate = new Date(args.getLong(DayObjectFragment.ARG_OBJECT));
+        this.dataSet = CourseBuilder.getTasks(currentDate);//DBContract.loadTasks(context);
         selectedItems = new SparseBooleanArray();
 
         Collections.sort(dataSet, Task.NameComparator);
@@ -106,7 +113,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         Task task = dataSet.get(position);
         holder.setName(task.getName());
         holder.setDescription(task.getDescription());
+        holder.setDueDate(task.getDueDate());
         holder.itemView.setActivated(selectedItems.get(position, false));
+        holder.setColor(task.getColor());
+        Date now = new Date();
+        if(task.getDueDate().getTime() < now.getTime()) {
+            holder.isPastDue(true);
+        } else {
+            holder.isPastDue(false);
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -143,6 +158,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         // each data item is just a string in this case
         private TextView mName;
         private TextView mDescription;
+        private View mColorStripe;
+        private View mPastDueStripe;
+        private TextView mDueDate;
+        private SimpleDateFormat df;
 
         private TaskAdapter mAdapter;
 
@@ -150,11 +169,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             super(v);
             v.setOnClickListener(this);
             v.setOnLongClickListener(this);
+            df = new SimpleDateFormat("MM/dd/yyyy");
 
             mAdapter = adapter;
 
             mName = (TextView) v.findViewById(R.id.task_name);
             mDescription = (TextView) v.findViewById(R.id.task_description);
+            mDueDate = (TextView) v.findViewById(R.id.task_due_date);
+            mColorStripe = (View) v.findViewById(R.id.color_stripe);
+            mPastDueStripe = (View) v.findViewById(R.id.past_due_stripe);
+
         }
 
         @Override
@@ -168,6 +192,22 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
         public void setDescription(String description) {
             mDescription.setText(description);
+        }
+
+        public void setDueDate(Date date) {
+            mDueDate.setText(df.format(date.getTime()));
+        }
+
+        public void setColor(int color) {
+            mColorStripe.setBackgroundColor(color);
+        }
+
+        public void isPastDue(Boolean value) {
+            if(value) {
+                mPastDueStripe.setVisibility(View.VISIBLE);
+            } else {
+                mPastDueStripe.setVisibility(View.GONE);
+            }
         }
 
         @Override
